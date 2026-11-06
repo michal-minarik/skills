@@ -1,14 +1,14 @@
 ---
-name: password-store
+name: my-secrets
 description: >-
-  ❤️ Manage secrets, API keys, credentials, and passwords on CloudTop using the standard unix password manager (pass).
-  Use when initializing password-store, checking GPG keys, generating passwords, inserting, reading, editing,
+  Manage secrets, API keys, credentials, and passwords on CloudTop using the standard unix password manager (pass).
+  Use when initializing password-store (pass), checking GPG keys, generating passwords, inserting, reading, editing,
   searching, organizing secrets, or integrating pass with automation scripts.
 metadata:
   icon: ❤️
 ---
 
-# ❤️ Password Store (`pass`) Management Skill
+# My Secrets Skill (my-secrets)
 
 This skill guides the agent and user in managing secrets, API keys, credentials, and configuration tokens on Google CloudTop workstations using [`pass`](https://www.passwordstore.org/) (the standard unix password manager).
 
@@ -22,10 +22,10 @@ Always verify the workstation environment before performing secret operations:
 
 Run the health check helper:
 ```bash
-~/.gemini/config/skills/password-store/scripts/check-setup.sh
+~/.gemini/config/skills/my-secrets/scripts/check-setup.sh
 ```
 
-Helper script details: [check-setup.sh](file:///usr/local/google/home/michalminarik/.gemini/config/skills/password-store/scripts/check-setup.sh)
+Helper script details: [check-setup.sh](file:///usr/local/google/home/michalminarik/.gemini/config/skills/my-secrets/scripts/check-setup.sh)
 
 ### Prerequisites Checklist
 - [x] **`pass` binary**: Installed at `/usr/bin/pass`.
@@ -34,13 +34,13 @@ Helper script details: [check-setup.sh](file:///usr/local/google/home/michalmina
 - [ ] **GPG Key**: A secret key must exist (`gpg --list-secret-keys`).
 - [ ] **Store Initialization**: `pass init <gpg-id>` executed.
 
-For complete step-by-step instructions on GPG key generation, `gpg-agent.conf` caching, and store initialization, see [setup-and-gpg.md](file:///usr/local/google/home/michalminarik/.gemini/config/skills/password-store/references/setup-and-gpg.md).
+For complete step-by-step instructions on GPG key generation, `gpg-agent.conf` caching, and store initialization, see [setup-and-gpg.md](file:///usr/local/google/home/michalminarik/.gemini/config/skills/my-secrets/references/setup-and-gpg.md).
 
 ---
 
 ## 2. Core Operational Procedures
 
-Detailed command syntax and patterns are documented in [workflows.md](file:///usr/local/google/home/michalminarik/.gemini/config/skills/password-store/references/workflows.md).
+Detailed command syntax and patterns are documented in [workflows.md](file:///usr/local/google/home/michalminarik/.gemini/config/skills/my-secrets/references/workflows.md).
 
 ### A. Secret Organization Convention ("Line 1 Rule")
 Always structure secret files as follows:

@@ -1,7 +1,7 @@
 ---
 name: my-voice
 description: >-
-  ❤️ Personal communication, persona, and terminology skill (/my-voice) for Michal
+  Personal communication, persona, and terminology skill (/my-voice) for Michal
   Minařík, paired with my-formatting. Enforces 12 constant Meta-Voice rules,
   Czech/English x Internal/External communication matrix, Google Cloud product
   terminology mapping, calm matter-of-fact tone (no exclamation marks or
@@ -10,7 +10,7 @@ metadata:
   icon: ❤️
 ---
 
-# ❤️ My Voice Skill (my-voice)
+# My Voice Skill (my-voice)
 
 * **Question:**
   * When should we use **my-voice**, and how does it pair with **my-formatting**?

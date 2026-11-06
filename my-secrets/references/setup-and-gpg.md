@@ -114,6 +114,6 @@ pass git log
 
 Run the helper script to verify your setup:
 ```bash
-~/.gemini/config/skills/password-store/scripts/check-setup.sh
+~/.gemini/config/skills/my-secrets/scripts/check-setup.sh
 ```
 All checks should display `[✓]`.

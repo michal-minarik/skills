@@ -1,7 +1,7 @@
 ---
 name: my-formatting
 description: >-
-  ❤️ Unified formatting, layout, and channel mechanics skill (/my-formatting) for
+  Unified formatting, layout, and channel mechanics skill (/my-formatting) for
   Google Docs, Markdown, Gmail drafts, and Google Chat. Enforces 4-level
   indentation, blue headers with pure black text, zero inline backticks, short
   ASCII hyphens (-), Q&A blocks in Docs, ad 1)/2) in emails, and mandatory
@@ -10,7 +10,7 @@ metadata:
   icon: ❤️
 ---
 
-# ❤️ My Formatting Skill (my-formatting)
+# My Formatting Skill (my-formatting)
 
 * **Question:**
   * When should we use **my-formatting**, and how does it pair with **my-voice**?
