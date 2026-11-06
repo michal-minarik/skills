@@ -26,6 +26,7 @@ skills/
 
 | Skill | Folder | Description |
 | :--- | :--- | :--- |
+| **`my-formatting`** | [`my-formatting/`](./my-formatting/) | Google Docs and Markdown formatting skill enforcing 4-level indentation, blue headers with pure black text, Question/Answer blocks, and short sentences (15–20 words max). |
 | **`password-store`** | [`password-store/`](./password-store/) | Manage secrets, API keys, credentials, and passwords on CloudTop using [`pass`](https://www.passwordstore.org/) (the standard Unix password manager) and GPG. |
 
 ---

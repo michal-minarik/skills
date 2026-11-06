@@ -60,6 +60,8 @@ Because this repository is backed by a GitHub remote (`git@github.com:michal-min
 
 ## 4. Current Skills Inventory
 
+- **`my-formatting`** (`my-formatting/SKILL.md`): Google Docs and Markdown formatting skill enforcing 4-level indentation, blue headers with pure black text, Q&A blocks, and short sentences (15–20 words max).
+  - Symlink: `~/.gemini/config/skills/my-formatting -> /usr/local/google/home/michalminarik/projects/skills/my-formatting`
 - **`password-store`** (`password-store/SKILL.md`): Manages secrets, API keys, credentials, and passwords on CloudTop using `pass` (the standard Unix password manager) and GPG.
   - Symlink: `~/.gemini/config/skills/password-store -> /usr/local/google/home/michalminarik/projects/skills/password-store`
 
