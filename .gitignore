@@ -1,0 +1,13 @@
+# OS & Editor files
+.DS_Store
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Python / Script caches
+__pycache__/
+*.py[cod]
+.venv/
+.env
