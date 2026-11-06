@@ -69,7 +69,7 @@ ls -la "$HOME/.gemini/config/skills/"
 ## Creating a New Skill
 
 1. Create a new directory `<skill-name>/` at the root of this repository (use lowercase, hyphenated names).
-2. Add a `SKILL.md` file with required YAML frontmatter and H1 title starting with `❤️`:
+2. Add a `SKILL.md` file with required YAML frontmatter:
    ```markdown
    ---
    name: <skill-name>

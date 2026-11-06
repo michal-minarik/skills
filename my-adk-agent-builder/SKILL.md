@@ -1,7 +1,7 @@
 ---
 name: my-adk-agent-builder
 description: >-
-  ❤️ End-to-end blueprint and environment conventions for creating, testing, securing,
+  End-to-end blueprint and environment conventions for creating, testing, securing,
   documenting, and deploying ADK agents (`ag-adk-*`) in Michal's CloudTop and
   Google Cloud environment. Use whenever creating a new `ag-adk-*` project,
   migrating or anonymizing a customer demo to ACME Corp, preparing an ADK repo
@@ -11,7 +11,7 @@ metadata:
   icon: ❤️
 ---
 
-# ❤️ My ADK Agent Builder Skill (my-adk-agent-builder)
+# My ADK Agent Builder Skill (my-adk-agent-builder)
 
 Use this skill alongside the `google-agents-cli-*` skills whenever creating, refactoring, testing, deploying, or preparing an `ag-adk-*` agent repository in Michal's environment.
 
