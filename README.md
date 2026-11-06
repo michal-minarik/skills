@@ -26,6 +26,7 @@ skills/
 
 | Skill | Folder | Description |
 | :--- | :--- | :--- |
+| **`my-adk-agent-builder`** | [`my-adk-agent-builder/`](./my-adk-agent-builder/) | End-to-end blueprint and environment conventions for creating, testing, securing, documenting, and deploying ADK agents (`ag-adk-*`) in Michal's CloudTop and Google Cloud environment (OpenTofu, WIF, Agent Runtime revisions, `cloud-gtm`). |
 | **`my-formatting`** | [`my-formatting/`](./my-formatting/) | Unified formatting, layout, and channel mechanics skill for Google Docs, Markdown, Gmail drafts, and Google Chat (4-level indentation, blue headers with pure black text, zero inline backticks, short `-` hyphens, Q&A blocks in Docs, `ad 1)` in emails, and mandatory Gmail HTML draft creation with signatures). |
 | **`my-voice`** | [`my-voice/`](./my-voice/) | Personal communication, persona, and terminology skill for Michal Minařík (12 Meta-Voice rules, Czech/English x Internal/External matrix, Google Cloud terminology mapping, calm matter-of-fact tone with zero `!` or unsolicited call offers, and 5 Scenario Dials). |
 | **`my-secrets`** | [`my-secrets/`](./my-secrets/) | Manage secrets, API keys, credentials, and passwords on CloudTop using [`pass`](https://www.passwordstore.org/) (the standard Unix password manager) and GPG. |

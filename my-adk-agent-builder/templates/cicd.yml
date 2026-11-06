@@ -1,0 +1,222 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Action to perform ('deploy' a new revision or 'rollback' traffic to an existing revision)"
+        required: true
+        type: choice
+        options:
+          - deploy
+          - rollback
+        default: deploy
+      revision_id:
+        description: "Target runtimeRevision ID for rollback (or 'previous' for the prior revision)"
+        required: false
+        type: string
+        default: previous
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  test:
+    name: Lint, Validate & Test
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.action == 'deploy' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Install dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run Ruff & Codespell
+        run: |
+          uv run ruff check .
+          uv run codespell
+
+      - name: Run Unit & Integration Tests
+        run: uv run pytest tests/unit tests/integration/test_agent.py
+
+      - name: Validate OpenTofu Configuration
+        uses: opentofu/setup-opentofu@592200bd4b9bbf4772ace78f887668b1aee8f716 # v1.0.5
+        with:
+          tofu_version: "1.9.0"
+
+      - name: Check OpenTofu Formatting & Syntax
+        working-directory: deployment/tofu
+        run: |
+          tofu fmt -check
+          tofu init -backend=false
+          tofu validate
+
+  deploy:
+    name: Deploy Revision & Promote Traffic
+    needs: test
+    if: ${{ (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && inputs.action == 'deploy') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_REGION: ${{ vars.GCP_REGION }}
+      AGENT_NAME: ${{ vars.AGENT_NAME }}
+      AGENT_DISPLAY_NAME: ${{ vars.AGENT_DISPLAY_NAME }}
+      GEMINI_ENTERPRISE_APP_ID: ${{ vars.GEMINI_ENTERPRISE_APP_ID }}
+      ASANA_MCP_SERVICE_NAME: ${{ vars.ASANA_MCP_SERVICE_NAME }}
+      ASANA_AUTH_PROVIDER_ID: ${{ vars.ASANA_AUTH_PROVIDER_ID }}
+      ASANA_BINDING_ID: ${{ vars.ASANA_BINDING_ID }}
+      DEFAULT_WORKSPACE_GID: ${{ vars.DEFAULT_WORKSPACE_GID }}
+      DEFAULT_PROJECT_GID: ${{ vars.DEFAULT_PROJECT_GID }}
+      COMMIT_SHA: ${{ github.sha }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Authenticate to Google Cloud via WIF
+        id: auth
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Prepare Agent Identity & Registry Binding
+        run: |
+          uv run python deployment/manage_revisions.py prepare-identity \
+            --project "${GCP_PROJECT_ID}" \
+            --location "${GCP_REGION}" \
+            --agent-name "${AGENT_NAME}" \
+            --mcp-service-name "${ASANA_MCP_SERVICE_NAME}" \
+            --auth-provider-id "${ASANA_AUTH_PROVIDER_ID}" \
+            --binding-id "${ASANA_BINDING_ID}"
+
+      - name: Deploy New Agent Runtime Revision
+        run: |
+          uvx google-agents-cli==1.6.1 deploy \
+            --project "${GCP_PROJECT_ID}" \
+            --region "${GCP_REGION}" \
+            --service-name "${AGENT_NAME}" \
+            --agent-identity \
+            --secrets "ASANA_CLIENT_ID=asana-client-id,ASANA_CLIENT_SECRET=asana-client-secret,ASANA_REFRESH_TOKEN=asana-refresh-token" \
+            --update-env-vars "GOOGLE_CLOUD_PROJECT=${GCP_PROJECT_ID},GOOGLE_CLOUD_LOCATION=global,GOOGLE_GENAI_USE_VERTEXAI=true,AGENT_REGISTRY_LOCATION=${GCP_REGION},ASANA_MCP_SERVICE_NAME=${ASANA_MCP_SERVICE_NAME},DEFAULT_WORKSPACE_GID=${DEFAULT_WORKSPACE_GID},DEFAULT_PROJECT_GID=${DEFAULT_PROJECT_GID},OTEL_RESOURCE_ATTRIBUTES=service.version=${COMMIT_SHA}" \
+            --no-confirm-project
+
+      - name: Smoke-Test New Revision, Route 100% Traffic & Sync Bindings
+        run: |
+          uv run python deployment/manage_revisions.py verify-and-promote \
+            --project "${GCP_PROJECT_ID}" \
+            --location "${GCP_REGION}" \
+            --agent-name "${AGENT_NAME}" \
+            --mcp-service-name "${ASANA_MCP_SERVICE_NAME}" \
+            --auth-provider-id "${ASANA_AUTH_PROVIDER_ID}" \
+            --binding-id "${ASANA_BINDING_ID}"
+
+      - name: Register / Update Agent in Gemini Enterprise
+        run: |
+          uvx google-agents-cli==1.6.1 publish gemini-enterprise \
+            --registration-type adk \
+            --gemini-enterprise-app-id "${GEMINI_ENTERPRISE_APP_ID}" \
+            --display-name "${AGENT_DISPLAY_NAME}" \
+            --description "Finds, searches, and inspects detailed information about Asana tickets in project ACME - Tasks using the Asana MCP Server from Google Cloud Agent Registry." \
+            --tool-description "Use this agent to list, search, inspect, comment on, or update Asana tickets and tasks in ACME - Tasks." \
+            --project-id "${GCP_PROJECT_ID}"
+
+      - name: List Active Runtime Revisions
+        run: |
+          uv run python deployment/manage_revisions.py list \
+            --project "${GCP_PROJECT_ID}" \
+            --location "${GCP_REGION}" \
+            --agent-name "${AGENT_NAME}"
+
+  rollback:
+    name: Rollback Traffic to Revision
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.action == 'rollback' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GCP_PROJECT_ID: ${{ vars.GCP_PROJECT_ID }}
+      GCP_REGION: ${{ vars.GCP_REGION }}
+      AGENT_NAME: ${{ vars.AGENT_NAME }}
+      TARGET_REVISION_ID: ${{ inputs.revision_id }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Authenticate to Google Cloud via WIF
+        uses: google-github-actions/auth@c200f3691d83b41bf9bbd8638997a462592937ed # v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          create_credentials_file: true
+          project_id: ${{ vars.GCP_PROJECT_ID }}
+
+      - name: Shift 100% Traffic to Target Revision
+        run: |
+          uv run python deployment/manage_revisions.py rollback \
+            --project "${GCP_PROJECT_ID}" \
+            --location "${GCP_REGION}" \
+            --agent-name "${AGENT_NAME}" \
+            --revision-id "${TARGET_REVISION_ID}"
+
+      - name: List Active Runtime Revisions
+        run: |
+          uv run python deployment/manage_revisions.py list \
+            --project "${GCP_PROJECT_ID}" \
+            --location "${GCP_REGION}" \
+            --agent-name "${AGENT_NAME}"

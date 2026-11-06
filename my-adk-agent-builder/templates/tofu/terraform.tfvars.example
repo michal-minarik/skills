@@ -1,0 +1,8 @@
+# Copy to terraform.tfvars (gitignored) and fill in your environment values:
+project_id               = "<your-project-id>"
+region                   = "europe-west3"
+github_org               = "cloud-gtm"
+github_repo              = "ag-adk-asana-ticket-inspector"
+gemini_enterprise_app_id = "projects/<project-number>/locations/global/collections/default_collection/engines/<app-id>"
+default_workspace_gid    = "<your-workspace-gid>"
+default_project_gid      = "<your-project-gid>"
