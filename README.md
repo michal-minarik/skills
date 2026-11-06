@@ -1,6 +1,6 @@
 # Personal Agent Skills Repository
 
-A personal collection of reusable AI agent skills for **Jetski** / **Gemini CLI**. Each skill is encapsulated in its own top-level directory and loaded into the local Jetski configuration (`~/.gemini/config/skills/`) via symbolic links.
+A personal collection of reusable AI agent skills for **Antigravity** / **Antigravity CLI**. Each skill is encapsulated in its own top-level directory and loaded into the local Antigravity configuration (`~/.gemini/config/skills/`) via symbolic links.
 
 ---
 
@@ -34,9 +34,9 @@ skills/
 
 ---
 
-## Loading Skills into Jetski (Symlink Workflow)
+## Loading Skills into Antigravity (Symlink Workflow)
 
-Jetski discovers machine-local skills from `~/.gemini/config/skills/<skill-name>/SKILL.md`. To keep all personal skills version-controlled in this repository while making them active across all workspaces, symlink each skill folder into `~/.gemini/config/skills/`.
+Antigravity discovers machine-local skills from `~/.gemini/config/skills/<skill-name>/SKILL.md`. To keep all personal skills version-controlled in this repository while making them active across all workspaces, symlink each skill folder into `~/.gemini/config/skills/`.
 
 ### Symlink a Single Skill
 

@@ -1,6 +1,6 @@
 # GEMINI.md — Personal Skills Repository Guidelines
 
-This repository (`/usr/local/google/home/michalminarik/projects/skills`) is Michal Minařík's personal Git repository for custom **Jetski / Gemini agent skills** (`git@github.com:michal-minarik/skills.git`).
+This repository (`/usr/local/google/home/michalminarik/projects/skills`) is Michal Minařík's personal Git repository for custom **Antigravity / Antigravity CLI agent skills** (`git@github.com:michal-minarik/skills.git`).
 
 When operating inside this workspace, follow these architectural and operational rules.
 
@@ -29,9 +29,9 @@ When operating inside this workspace, follow these architectural and operational
 
 ---
 
-## 2. Symlink Integration with Jetski Configuration
+## 2. Symlink Integration with Antigravity Configuration
 
-Skills in this repository are loaded into Jetski via symbolic links in `/usr/local/google/home/michalminarik/.gemini/config/skills/`.
+Skills in this repository are loaded into Antigravity via symbolic links in `/usr/local/google/home/michalminarik/.gemini/config/skills/`.
 
 - **Symlink Target Convention**:
   ```text
