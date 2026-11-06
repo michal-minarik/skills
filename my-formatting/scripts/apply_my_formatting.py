@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Linter and Google Docs style/indentation enforcer for `my_formatting` skill.
+"""Linter and Google Docs style/indentation enforcer for `my-formatting` skill.
 
 Modes:
   1. Markdown Linter (pre-import gate):
@@ -16,7 +16,7 @@ import re
 import subprocess
 import sys
 import tempfile
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 GDOCS_BIN = "/google/bin/releases/gemini-agents-gdocs/gdocs"
 
@@ -51,7 +51,7 @@ def count_words(text: str) -> int:
 
 
 def lint_markdown(path: str, max_words: int = 20, warn_words: int = 15, max_paren_words: int = 6) -> int:
-    """Lint a Markdown file against `my_formatting` laws."""
+    """Lint a Markdown file against `my-formatting` laws."""
     if not os.path.exists(path):
         print(f"ERROR: File not found: {path}", file=sys.stderr)
         return 2
@@ -62,28 +62,45 @@ def lint_markdown(path: str, max_words: int = 20, warn_words: int = 15, max_pare
     errors: List[str] = []
     warnings: List[str] = []
     in_fence = False
+    in_frontmatter = False
 
-    backtick_num_re = re.compile(r"`[~<>=$€£]*\d[\d,._/%+-]*[kKmMbB%]*`")
+    inline_backtick_re = re.compile(r"`[^`]+`")
+    long_dash_re = re.compile(r"[\u2013\u2014]")
     paren_re = re.compile(r"(?<!\])\(([^()]+)\)")
 
     for lineno, raw_line in enumerate(lines, 1):
         stripped = raw_line.strip()
+        if lineno == 1 and stripped == "---":
+            in_frontmatter = True
+            continue
+        if in_frontmatter:
+            if stripped == "---":
+                in_frontmatter = False
+            continue
         if stripped.startswith(("```", "~~~")):
             in_fence = not in_fence
             continue
         if in_fence or not stripped:
             continue
+
+        # 1. Check for banned inline backticks across all prose and tables
+        for match in inline_backtick_re.finditer(raw_line):
+            errors.append(
+                f"{path}:{lineno}: [INLINE_BACKTICK_BANNED] "
+                f"Do not use inline backticks ({match.group(0)}). Use **bold** or *italics* instead."
+            )
+
+        # 2. Check for banned em-dashes (—) and en-dashes (–)
+        for match in long_dash_re.finditer(raw_line):
+            errors.append(
+                f"{path}:{lineno}: [LONG_DASH_BANNED] "
+                f"Found long dash '{match.group(0)}'. Always use the standard ASCII short hyphen '-'."
+            )
+
         if stripped.startswith("|") or stripped.startswith("---"):
             continue
 
-        # 1. Check for Christmas-tree backticks around numbers/metrics
-        for match in backtick_num_re.finditer(raw_line):
-            errors.append(
-                f"{path}:{lineno}: [BACKTICK_NUMBER_CHRISTMAS_TREE] "
-                f"Do not wrap numbers/metrics in backticks ({match.group(0)} turns green #188038 in Google Docs)."
-            )
-
-        # 2. Check for inline Question: / Answer: labels (must be on their own line)
+        # 3. Check for inline Question: / Answer: labels (must be on their own line)
         qa_inline = re.match(r"^(?:[-*+]\s+)?\*\*(Question|Answer|Details):\*\*\s+\S+", stripped)
         if qa_inline:
             errors.append(
@@ -91,7 +108,7 @@ def lint_markdown(path: str, max_words: int = 20, warn_words: int = 15, max_pare
                 f"Put '**{qa_inline.group(1)}:**' on its own standalone line and indent the content on the next line."
             )
 
-        # 3. Check parenthetical word counts (max 6 words inside (...))
+        # 4. Check parenthetical word counts (max 6 words inside (...))
         line_without_links = re.sub(r"\]\([^)]+\)", "]", raw_line)
         for pmatch in paren_re.finditer(line_without_links):
             inner = pmatch.group(1).strip()
@@ -103,10 +120,9 @@ def lint_markdown(path: str, max_words: int = 20, warn_words: int = 15, max_pare
                     f"Shorten to <={max_paren_words} words or promote to a child bullet."
                 )
 
-        # 4. Check sentence / bullet word count (hard ceiling: 20 words, warning: >15 words)
+        # 5. Check sentence / bullet word count (hard ceiling: 20 words, warning: >15 words)
         if stripped.startswith("#"):
             continue
-        # Remove parentheticals <=6 words when checking core sentence length, or check both
         sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", stripped) if s.strip()]
         for sent in sentences:
             wcount = count_words(sent)
@@ -128,12 +144,12 @@ def lint_markdown(path: str, max_words: int = 20, warn_words: int = 15, max_pare
 
     if errors:
         print(
-            f"\nFAILED `my_formatting` lint: {len(errors)} error(s), {len(warnings)} warning(s).",
+            f"\nFAILED `my-formatting` lint: {len(errors)} error(s), {len(warnings)} warning(s).",
             file=sys.stderr,
         )
         return 1
 
-    print(f"PASSED `my_formatting` lint: 0 errors, {len(warnings)} warning(s).")
+    print(f"PASSED `my-formatting` lint: 0 errors, {len(warnings)} warning(s).")
     return 0
 
 
@@ -513,7 +529,7 @@ def enforce_gdoc_formatting(doc_id: str, tab_id: Optional[str], apply_changes: b
             print(f"ERROR applying formatting batch: {bres.stderr}", file=sys.stderr)
             return 1
         print(bres.stdout.strip())
-        print("Successfully applied `my_formatting` styles, black text, and 4-level indentation.")
+        print("Successfully applied `my-formatting` styles, black text, and 4-level indentation.")
         return 0
     finally:
         if os.path.exists(ops_path):
@@ -521,12 +537,12 @@ def enforce_gdoc_formatting(doc_id: str, tab_id: Optional[str], apply_changes: b
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="`my_formatting` linter and Google Docs style enforcer.")
-    parser.add_argument("--lint", metavar="MARKDOWN_FILE", help="Lint a Markdown file against `my_formatting` rules.")
+    parser = argparse.ArgumentParser(description="`my-formatting` linter and Google Docs style enforcer.")
+    parser.add_argument("--lint", metavar="MARKDOWN_FILE", help="Lint a Markdown file against `my-formatting` rules.")
     parser.add_argument("--max-words", type=int, default=20, help="Hard maximum words per sentence (default: 20).")
     parser.add_argument("--warn-words", type=int, default=15, help="Warning threshold words per sentence (default: 15).")
     parser.add_argument("--max-paren-words", type=int, default=6, help="Hard maximum words inside (...) (default: 6).")
-    parser.add_argument("--doc-id", metavar="DOC_ID", help="Google Doc ID to apply `my_formatting` styles and indentation.")
+    parser.add_argument("--doc-id", metavar="DOC_ID", help="Google Doc ID to apply `my-formatting` styles and indentation.")
     parser.add_argument("--tab", metavar="TAB_ID", help="Optional target tab ID (e.g. t.0).")
     parser.add_argument("--apply", action="store_true", help="Execute the compiled batch update on the Google Doc.")
 

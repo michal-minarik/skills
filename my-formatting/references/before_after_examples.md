@@ -1,15 +1,15 @@
-# `my_formatting` Before-and-After Examples
+# my-formatting Before-and-After Examples
 
 * **Question:**
-  * How does `my_formatting` transform verbose AI output into readable documents?
+  * How does **my-formatting** transform verbose AI output into readable documents?
 * **Answer:**
-  * Compare the `BAD` and `GOOD` examples below (using a generic `Cymbal Corp` scenario with `Alex`, `Joe`, and `Anne`).
+  * Compare the **BAD** and **GOOD** examples below (Cymbal Corp scenario).
 
 ---
 
 ## Example 1: Executive Snapshot & Metadata Block
 
-### BAD (Default Agent Output — Wall of Text & Green Backtick Splatter)
+### BAD - Default Agent Output (Wall of Text & Backtick Splatter)
 
 ```markdown
 **Prepared For:** Alex, Joe & Anne (Cloud Data Team) | **Vector Account:** `0014M00001EXAMPLE01` (`Cymbal Corp` / `cymbal.example.com`) | **Primary Instance:** `https://cymbal.cloud.looker.com` (`looker-prod-gcp-eu-west3-cymbal` dedicated single-tenant GCP)
@@ -18,19 +18,21 @@
 ```
 
 * **Question:**
-  * Why does the `BAD` example above fail human readers?
+  * Why does the **BAD** example above fail human readers?
 * **Answer:**
-  * It violates three core readability laws:
+  * It violates four core readability laws:
     * **Working-Memory Overflow:**
       * Packs 85 words into one single sentence.
-    * **Christmas-Tree Visual Noise:**
-      * Uses 16 inline backticks that turn bright green (`#188038`) in Google Docs.
+    * **Christmas-Tree Visual Noise & Backtick Clutter:**
+      * Uses 16 inline backticks that clutter text and turn bright green (#188038) in Google Docs.
+    * **Long Em-Dash Usage:**
+      * Uses an em-dash instead of a standard ASCII short hyphen (-).
     * **Flat Left-Margin Wall:**
       * Jams metadata and metrics into horizontal pipe-separated lines.
 
 ---
 
-### GOOD (`my_formatting` Style — 4-Level Indentation, Black Bullets, Short Lines)
+### GOOD - my-formatting Style (4-Level Indentation & Short Lines)
 
 ```text
 Prepared For:                                           [Level 0: 0pt, Bold Black]
@@ -60,19 +62,19 @@ Executive Snapshot:                                     [Level 0: 0pt, Bold Blac
 ```
 
 * **Question:**
-  * Why does the `GOOD` example work immediately?
+  * Why does the **GOOD** example work immediately?
 * **Answer:**
   * It applies all 8 formatting laws:
     * Every line is 3 to 14 words long.
     * Every parenthesis holds 2 to 4 words (6 words max).
-    * Zero green backticks appear; all body text is pure black (`#000000`).
+    * Zero inline backticks appear; all body text is pure black (#000000).
     * Child bullets (72pt) nest cleanly under bold parent bullets (36pt).
 
 ---
 
 ## Example 2: Question / Answer Block
 
-### BAD (Default Agent Output — 92-Word Sentence & 13-Word Parenthetical)
+### BAD - Default Agent Output (92-Word Sentence & Long Parenthetical)
 
 ```markdown
 ### Question #1 — Permissions, Role Architecture & Seat Governance
@@ -84,7 +86,7 @@ Executive Snapshot:                                     [Level 0: 0pt, Bold Blac
 
 ---
 
-### GOOD (`my_formatting` Style — Question First, Indented Tree, Short Sentences)
+### GOOD - my-formatting Style (Question First & Short Sentences)
 
 ```text
 ### #1 Permissions, Role Architecture & Seat Governance     [Level 0: 0pt, H3 Blue #4A86E8]
@@ -109,7 +111,7 @@ Executive Snapshot:                                     [Level 0: 0pt, Bold Blac
   * How is the visual hierarchy structured in Example 2?
 * **Answer:**
   * Each layer steps right by 36pt:
-    * **Level 0 (0pt):** Blue H3 header (`#4A86E8`, 10pt Bold `Google Sans`).
-    * **Level 1 (36pt):** Standalone `Question:` and `Answer:` labels in bold black.
+    * **Level 0 (0pt):** Blue H3 header (#4A86E8, 10pt Bold **Google Sans**).
+    * **Level 1 (36pt):** Standalone **Question:** and **Answer:** labels in bold black.
     * **Level 2 (72pt):** Short Question and Answer sentences (9 to 16 words each).
     * **Level 3 (108pt):** Vertical black bullet points for contract tiers and action steps.

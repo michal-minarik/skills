@@ -60,8 +60,10 @@ Because this repository is backed by a GitHub remote (`git@github.com:michal-min
 
 ## 4. Current Skills Inventory
 
-- **`my-formatting`** (`my-formatting/SKILL.md`): Google Docs and Markdown formatting skill enforcing 4-level indentation, blue headers with pure black text, Q&A blocks, and short sentences (15–20 words max).
+- **`my-formatting`** (`my-formatting/SKILL.md`): Unified formatting, layout, and channel mechanics skill for Google Docs, Markdown, Gmail drafts, and Google Chat (4-level indentation, blue headers with pure black text, zero inline backticks, short `-` hyphens, Q&A blocks in Docs, `ad 1)` in emails, and mandatory Gmail HTML draft creation with signatures).
   - Symlink: `~/.gemini/config/skills/my-formatting -> /usr/local/google/home/michalminarik/projects/skills/my-formatting`
+- **`my-voice`** (`my-voice/SKILL.md`): Personal communication, persona, and terminology skill for Michal Minařík (12 Meta-Voice rules, Czech/English x Internal/External matrix, Google Cloud terminology mapping, calm matter-of-fact tone with zero `!` or unsolicited call offers, and 5 Scenario Dials).
+  - Symlink: `~/.gemini/config/skills/my-voice -> /usr/local/google/home/michalminarik/projects/skills/my-voice`
 - **`password-store`** (`password-store/SKILL.md`): Manages secrets, API keys, credentials, and passwords on CloudTop using `pass` (the standard Unix password manager) and GPG.
   - Symlink: `~/.gemini/config/skills/password-store -> /usr/local/google/home/michalminarik/projects/skills/password-store`
 
