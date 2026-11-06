@@ -18,9 +18,11 @@ When operating inside this workspace, follow these architectural and operational
    ├── resources/        # Optional: Static assets or templates
    └── examples/         # Optional: Example configurations or code snippets
    ```
-3. **Frontmatter Invariants**:
+3. **Frontmatter, Title & Visual Identity Invariants**:
    - `name` in `SKILL.md` frontmatter **must** match the folder name `<skill-name>` (lowercase, hyphenated).
-   - `description` must clearly specify both **what** the skill does and **when** the agent should use it.
+   - **Title Emoji Requirement**: The title (top-level `#` H1 heading in `SKILL.md`) of each skill **must** start with the `❤️` emoji (e.g., `# ❤️ My Formatting Skill (my-formatting)`).
+   - **Visual Icon Metadata**: The frontmatter `metadata.icon` **must** be set to `❤️` so that personal skills are immediately identifiable with the red heart in `/skills`, CLI listings, and IDE surfaces.
+   - `description` must clearly specify both **what** the skill does and **when** the agent should use it, and should be prefixed with `❤️` for immediate visual recognition in skill catalog listings.
 4. **Progressive Disclosure**:
    - Keep `SKILL.md` focused and concise.
    - Offload detailed setup guides, long tables, and reference manuals into `<skill-name>/references/*.md` and link to them from `SKILL.md`.
@@ -60,11 +62,11 @@ Because this repository is backed by a GitHub remote (`git@github.com:michal-min
 
 ## 4. Current Skills Inventory
 
-- **`my-formatting`** (`my-formatting/SKILL.md`): Unified formatting, layout, and channel mechanics skill for Google Docs, Markdown, Gmail drafts, and Google Chat (4-level indentation, blue headers with pure black text, zero inline backticks, short `-` hyphens, Q&A blocks in Docs, `ad 1)` in emails, and mandatory Gmail HTML draft creation with signatures).
+- **`my-formatting`** (`my-formatting/SKILL.md`): ❤️ Unified formatting, layout, and channel mechanics skill for Google Docs, Markdown, Gmail drafts, and Google Chat (4-level indentation, blue headers with pure black text, zero inline backticks, short `-` hyphens, Q&A blocks in Docs, `ad 1)` in emails, and mandatory Gmail HTML draft creation with signatures).
   - Symlink: `~/.gemini/config/skills/my-formatting -> /usr/local/google/home/michalminarik/projects/skills/my-formatting`
-- **`my-voice`** (`my-voice/SKILL.md`): Personal communication, persona, and terminology skill for Michal Minařík (12 Meta-Voice rules, Czech/English x Internal/External matrix, Google Cloud terminology mapping, calm matter-of-fact tone with zero `!` or unsolicited call offers, and 5 Scenario Dials).
+- **`my-voice`** (`my-voice/SKILL.md`): ❤️ Personal communication, persona, and terminology skill for Michal Minařík (12 Meta-Voice rules, Czech/English x Internal/External matrix, Google Cloud terminology mapping, calm matter-of-fact tone with zero `!` or unsolicited call offers, and 5 Scenario Dials).
   - Symlink: `~/.gemini/config/skills/my-voice -> /usr/local/google/home/michalminarik/projects/skills/my-voice`
-- **`password-store`** (`password-store/SKILL.md`): Manages secrets, API keys, credentials, and passwords on CloudTop using `pass` (the standard Unix password manager) and GPG.
+- **`password-store`** (`password-store/SKILL.md`): ❤️ Manage secrets, API keys, credentials, and passwords on CloudTop using `pass` (the standard Unix password manager) and GPG.
   - Symlink: `~/.gemini/config/skills/password-store -> /usr/local/google/home/michalminarik/projects/skills/password-store`
 
 > **Maintenance Rule**: Whenever you add, rename, or remove a skill in this repository, update the skill tables in both `README.md` and `GEMINI.md`.

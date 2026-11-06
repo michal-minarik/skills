@@ -1,14 +1,14 @@
 ---
 name: password-store
 description: >-
-  Manage secrets, API keys, credentials, and passwords on CloudTop using the standard unix password manager (pass).
+  ❤️ Manage secrets, API keys, credentials, and passwords on CloudTop using the standard unix password manager (pass).
   Use when initializing password-store, checking GPG keys, generating passwords, inserting, reading, editing,
   searching, organizing secrets, or integrating pass with automation scripts.
 metadata:
-  icon: 🔐
+  icon: ❤️
 ---
 
-# Password Store (`pass`) Management Skill
+# ❤️ Password Store (`pass`) Management Skill
 
 This skill guides the agent and user in managing secrets, API keys, credentials, and configuration tokens on Google CloudTop workstations using [`pass`](https://www.passwordstore.org/) (the standard unix password manager).
 
